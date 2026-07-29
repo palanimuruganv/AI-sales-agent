@@ -1,4 +1,5 @@
 import mongoose, { Schema, type Document, type Model } from 'mongoose';
+import type { ScrapeErrorCode } from '../services/providers/scraperProvider.js';
 
 export interface IWebsiteAnalysis {
   companyId: mongoose.Types.ObjectId;
@@ -9,7 +10,10 @@ export interface IWebsiteAnalysis {
   scrapedAt?: Date;
   status: 'PENDING' | 'PROCESSING' | 'COMPLETED' | 'FAILED';
   retryCount: number;
+  /** Human-readable failure message. */
   error?: string;
+  /** Machine-readable failure classification (e.g. DNS_NOT_FOUND, TIMEOUT). */
+  errorCode?: ScrapeErrorCode;
 }
 
 export interface IWebsiteAnalysisDocument extends IWebsiteAnalysis, Document {
@@ -31,6 +35,20 @@ const websiteAnalysisSchema = new Schema<IWebsiteAnalysisDocument>(
     },
     retryCount: { type: Number, default: 0, min: 0 },
     error: { type: String, trim: true },
+    errorCode: {
+      type: String,
+      enum: [
+        'DNS_NOT_FOUND',
+        'CONNECTION_REFUSED',
+        'SSL_ERROR',
+        'TIMEOUT',
+        'HTTP_404',
+        'HTTP_403',
+        'HTTP_ERROR',
+        'INVALID_DOMAIN',
+        'UNKNOWN',
+      ],
+    },
   },
   { timestamps: true },
 );

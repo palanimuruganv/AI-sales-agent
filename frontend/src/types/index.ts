@@ -61,6 +61,17 @@ export interface CsvImportSummary {
   errors: string[];
 }
 
+export type ScrapeErrorCode =
+  | 'DNS_NOT_FOUND'
+  | 'CONNECTION_REFUSED'
+  | 'SSL_ERROR'
+  | 'TIMEOUT'
+  | 'HTTP_404'
+  | 'HTTP_403'
+  | 'HTTP_ERROR'
+  | 'INVALID_DOMAIN'
+  | 'UNKNOWN';
+
 export interface WebsiteAnalysis {
   _id: string;
   companyId: string;
@@ -71,7 +82,10 @@ export interface WebsiteAnalysis {
   scrapedAt?: string;
   status: 'PENDING' | 'PROCESSING' | 'COMPLETED' | 'FAILED';
   retryCount: number;
+  /** Human-readable failure message. */
   error?: string;
+  /** Machine-readable failure classification. */
+  errorCode?: ScrapeErrorCode;
   createdAt: string;
   updatedAt: string;
 }

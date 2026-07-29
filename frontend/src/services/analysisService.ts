@@ -36,3 +36,13 @@ export async function updateAnalysis(
 export async function deleteAnalysis(id: string): Promise<void> {
   await apiClient.delete(`/analyses/${id}`);
 }
+
+export async function analyzeCompany(companyId: string): Promise<unknown> {
+  const { data } = await apiClient.post(`/website-analysis/${companyId}/analyze`);
+  return data.data;
+}
+
+export async function getCompanyWebsiteAnalysis(companyId: string): Promise<unknown> {
+  const { data } = await apiClient.get(`/website-analysis/${companyId}`);
+  return data.data;
+}

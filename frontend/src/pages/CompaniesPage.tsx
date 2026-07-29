@@ -1,6 +1,8 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useMemo, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { listCompanies, uploadCompanies } from '@/services/companyService';
+import { analyzeCompany } from '@/services/analysisService';
 import { getErrorMessage } from '@/services/apiClient';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -12,6 +14,7 @@ const pageSize = 8;
 
 export function CompaniesPage() {
   const queryClient = useQueryClient();
+  const navigate = useNavigate();
   const [search, setSearch] = useState('');
   const [page, setPage] = useState(1);
   const [error, setError] = useState('');
@@ -51,6 +54,15 @@ export function CompaniesPage() {
     }
     setError('');
     uploadMutation.mutate(file);
+  };
+
+  const handleAnalyze = async (companyId: string) => {
+    try {
+      await analyzeCompany(companyId);
+      await queryClient.invalidateQueries({ queryKey: ['companies'] });
+    } catch (err) {
+      setError(getErrorMessage(err));
+    }
   };
 
   return (
@@ -154,6 +166,16 @@ export function CompaniesPage() {
                       </td>
                       <td className="py-3 pr-4">{company.leadScore ?? '—'}</td>
                       <td className="py-3 pr-4">{new Date(company.createdAt).toLocaleDateString()}</td>
+                      <td className="py-3 pr-4">
+                        <div className="flex gap-2">
+                          <Button size="sm" variant="outline" onClick={() => void handleAnalyze(company._id)}>
+                            Analyze
+                          </Button>
+                          <Button size="sm" variant="ghost" onClick={() => navigate(`/website-analysis/${company._id}`)}>
+                            Details
+                          </Button>
+                        </div>
+                      </td>
                     </tr>
                   ))}
                 </tbody>

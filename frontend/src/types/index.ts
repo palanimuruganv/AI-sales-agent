@@ -61,6 +61,21 @@ export interface CsvImportSummary {
   errors: string[];
 }
 
+export interface WebsiteAnalysis {
+  _id: string;
+  companyId: string;
+  url: string;
+  title?: string;
+  description?: string;
+  content?: string;
+  scrapedAt?: string;
+  status: 'PENDING' | 'PROCESSING' | 'COMPLETED' | 'FAILED';
+  retryCount: number;
+  error?: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
 export type AnalysisPriority = 'low' | 'medium' | 'high';
 
 export interface Analysis {

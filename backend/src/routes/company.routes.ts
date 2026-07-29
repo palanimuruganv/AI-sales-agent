@@ -8,7 +8,22 @@ import {
   companyIdParamSchema,
   listCompaniesSchema,
 } from '../validators/company.validator.js';
-import { companyController } from '../container.js';
+import { companyController, csvImportController } from '../container.js';
+import multer from 'multer';
+import path from 'path';
+
+const __dirname = path.dirname(__filename);
+const upload = multer({
+  dest: path.join(__dirname, '../../uploads'),
+  limits: { fileSize: 10 * 1024 * 1024 },
+  fileFilter: (_req, file, cb) => {
+    if (file.mimetype !== 'text/csv' && !file.originalname.toLowerCase().endsWith('.csv')) {
+      cb(new Error('Only CSV files are allowed'));
+      return;
+    }
+    cb(null, true);
+  },
+});
 
 const router = Router();
 
@@ -32,6 +47,11 @@ router.use(authenticate);
  */
 router.get('/', validate(listCompaniesSchema), asyncHandler(companyController.list));
 router.post('/', validate(createCompanySchema), asyncHandler(companyController.create));
+router.post(
+  '/upload',
+  upload.single('file'),
+  asyncHandler(csvImportController.upload),
+);
 
 router.get(
   '/:id',

@@ -18,17 +18,20 @@ export class AnalysisController {
   };
 
   getById = async (req: Request, res: Response): Promise<void> => {
-    const analysis = await this.analysisService.getById(req.user!.id, req.params.id);
+    const id = Array.isArray(req.params.id) ? req.params.id[0] : req.params.id;
+    const analysis = await this.analysisService.getById(req.user!.id, id);
     res.json({ success: true, data: analysis });
   };
 
   update = async (req: Request, res: Response): Promise<void> => {
-    const analysis = await this.analysisService.update(req.user!.id, req.params.id, req.body);
+    const id = Array.isArray(req.params.id) ? req.params.id[0] : req.params.id;
+    const analysis = await this.analysisService.update(req.user!.id, id, req.body);
     res.json({ success: true, data: analysis });
   };
 
   remove = async (req: Request, res: Response): Promise<void> => {
-    await this.analysisService.remove(req.user!.id, req.params.id);
+    const id = Array.isArray(req.params.id) ? req.params.id[0] : req.params.id;
+    await this.analysisService.remove(req.user!.id, id);
     res.status(204).send();
   };
 }

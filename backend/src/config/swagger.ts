@@ -1,9 +1,8 @@
 import swaggerJsdoc from 'swagger-jsdoc';
 import path from 'path';
-import { fileURLToPath } from 'url';
 import { env } from './env.js';
 
-const __dirname = path.dirname(fileURLToPath(import.meta.url));
+const __dirname = path.dirname(__filename);
 
 const options: swaggerJsdoc.Options = {
   definition: {

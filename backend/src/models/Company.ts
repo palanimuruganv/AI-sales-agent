@@ -13,6 +13,10 @@ export interface ICompany {
   phone?: string;
   status: CompanyStatus;
   leadScore?: number;
+  analysisStatus: 'PENDING' | 'PROCESSING' | 'COMPLETED' | 'FAILED';
+  analysisId?: mongoose.Types.ObjectId;
+  lastAnalyzedAt?: Date;
+  importBatchId?: string;
   createdAt: Date;
 }
 
@@ -37,6 +41,14 @@ const companySchema = new Schema<ICompanyDocument>(
       default: 'new',
     },
     leadScore: { type: Number, min: 0, max: 100 },
+    analysisStatus: {
+      type: String,
+      enum: ['PENDING', 'PROCESSING', 'COMPLETED', 'FAILED'],
+      default: 'PENDING',
+    },
+    analysisId: { type: Schema.Types.ObjectId, ref: 'Analysis' },
+    lastAnalyzedAt: { type: Date },
+    importBatchId: { type: String, trim: true },
   },
   { timestamps: { createdAt: true, updatedAt: true } },
 );

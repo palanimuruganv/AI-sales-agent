@@ -1,5 +1,5 @@
 import { apiClient } from './apiClient';
-import type { ApiResponse, Company, PaginatedResult } from '@/types';
+import type { ApiResponse, Company, CsvImportSummary, PaginatedResult } from '@/types';
 
 export async function listCompanies(page = 1, limit = 20): Promise<PaginatedResult<Company>> {
   const { data } = await apiClient.get<ApiResponse<PaginatedResult<Company>>>('/companies', {
@@ -30,4 +30,15 @@ export async function updateCompany(
 
 export async function deleteCompany(id: string): Promise<void> {
   await apiClient.delete(`/companies/${id}`);
+}
+
+export async function uploadCompanies(file: File): Promise<CsvImportSummary> {
+  const formData = new FormData();
+  formData.append('file', file);
+
+  const { data } = await apiClient.post<CsvImportSummary>('/companies/upload', formData, {
+    headers: { 'Content-Type': 'multipart/form-data' },
+  });
+
+  return data;
 }

@@ -8,6 +8,11 @@ declare global {
         email: string;
         role: UserRole;
       };
+      file?: {
+        path?: string;
+        originalname?: string;
+        mimetype?: string;
+      };
     }
   }
 }

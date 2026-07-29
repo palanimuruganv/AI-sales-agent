@@ -35,6 +35,8 @@ export type CompanyStatus =
   | 'won'
   | 'lost';
 
+export type AnalysisStatus = 'PENDING' | 'PROCESSING' | 'COMPLETED' | 'FAILED';
+
 export interface Company {
   _id: string;
   companyName: string;
@@ -47,7 +49,16 @@ export interface Company {
   phone?: string;
   status: CompanyStatus;
   leadScore?: number;
+  analysisStatus?: AnalysisStatus;
+  importBatchId?: string;
   createdAt: string;
+}
+
+export interface CsvImportSummary {
+  uploaded: number;
+  duplicates: number;
+  failed: number;
+  errors: string[];
 }
 
 export type AnalysisPriority = 'low' | 'medium' | 'high';

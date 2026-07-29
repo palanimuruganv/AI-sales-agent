@@ -17,17 +17,20 @@ export class CompanyController {
   };
 
   getById = async (req: Request, res: Response): Promise<void> => {
-    const company = await this.companyService.getById(req.user!.id, req.params.id);
+    const id = Array.isArray(req.params.id) ? req.params.id[0] : req.params.id;
+    const company = await this.companyService.getById(req.user!.id, id);
     res.json({ success: true, data: company });
   };
 
   update = async (req: Request, res: Response): Promise<void> => {
-    const company = await this.companyService.update(req.user!.id, req.params.id, req.body);
+    const id = Array.isArray(req.params.id) ? req.params.id[0] : req.params.id;
+    const company = await this.companyService.update(req.user!.id, id, req.body);
     res.json({ success: true, data: company });
   };
 
   remove = async (req: Request, res: Response): Promise<void> => {
-    await this.companyService.remove(req.user!.id, req.params.id);
+    const id = Array.isArray(req.params.id) ? req.params.id[0] : req.params.id;
+    await this.companyService.remove(req.user!.id, id);
     res.status(204).send();
   };
 }

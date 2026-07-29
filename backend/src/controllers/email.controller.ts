@@ -18,17 +18,20 @@ export class EmailController {
   };
 
   getById = async (req: Request, res: Response): Promise<void> => {
-    const email = await this.emailService.getById(req.user!.id, req.params.id);
+    const id = Array.isArray(req.params.id) ? req.params.id[0] : req.params.id;
+    const email = await this.emailService.getById(req.user!.id, id);
     res.json({ success: true, data: email });
   };
 
   update = async (req: Request, res: Response): Promise<void> => {
-    const email = await this.emailService.update(req.user!.id, req.params.id, req.body);
+    const id = Array.isArray(req.params.id) ? req.params.id[0] : req.params.id;
+    const email = await this.emailService.update(req.user!.id, id, req.body);
     res.json({ success: true, data: email });
   };
 
   remove = async (req: Request, res: Response): Promise<void> => {
-    await this.emailService.remove(req.user!.id, req.params.id);
+    const id = Array.isArray(req.params.id) ? req.params.id[0] : req.params.id;
+    await this.emailService.remove(req.user!.id, id);
     res.status(204).send();
   };
 }

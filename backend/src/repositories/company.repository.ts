@@ -34,4 +34,29 @@ export class CompanyRepository extends BaseRepository<ICompanyDocument> {
       ownerId: new mongoose.Types.ObjectId(ownerId),
     }).exec();
   }
+
+  async bulkInsertCompanies(data: Array<Partial<ICompanyDocument>>): Promise<ICompanyDocument[]> {
+    if (!data.length) {
+      return [];
+    }
+
+    return Company.insertMany(data, { ordered: false });
+  }
+
+  async findDuplicateWebsites(ownerId: string, websites: string[]): Promise<Set<string>> {
+    const normalizedWebsites = websites.filter(Boolean);
+    if (!normalizedWebsites.length) {
+      return new Set<string>();
+    }
+
+    const results = await Company.find(
+      {
+        ownerId: new mongoose.Types.ObjectId(ownerId),
+        website: { $in: normalizedWebsites },
+      },
+      { website: 1 },
+    ).lean();
+
+    return new Set(results.map((result) => String(result.website).toLowerCase()));
+  }
 }

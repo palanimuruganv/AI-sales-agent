@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { login, register } from '@/services/authService';
+import { login } from '@/services/authService';
 import { useAuthStore } from '@/store/authStore';
 import { getErrorMessage } from '@/services/apiClient';
 import { Button } from '@/components/ui/button';
